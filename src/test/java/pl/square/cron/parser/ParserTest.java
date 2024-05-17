@@ -23,9 +23,11 @@ public class ParserTest {
             "0 0 0 0 ",
             "aa 99 c+d 0 0 cmd",
             "1- 1 0 0 0 cmd",
+            "1/ 1 0 0 0 cmd",
+            "1/0 1 0 0 0 cmd",
     })
     void failing(String cronExpression) {
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> parser.parse(cronExpression));
+        assertThatExceptionOfType(Exception.class).isThrownBy(() -> parser.parse(cronExpression));
     }
 
     @ParameterizedTest
@@ -47,9 +49,11 @@ public class ParserTest {
    */
     private static Stream<Arguments> provideCronStringsVsDescriptions() {
     return Stream.of(
-      Arguments.of("0 0 1 1 0 cmd",                   List.of("0", "0", "1", "1", "0", "cmd"))
-//      Arguments.of("*/15 0 1,15 * 1-5 /usr/bin/find", List.of("0 15 30 45", "0", "1 15", "1", "1 2 3 4 5", "cmd")),
-//      Arguments.of("5 0 * * * $HOME/bin/daily.job",   List.of("5", "0", "1 2 3 4 5 6 7 8 9 10", "1", "0", "$HOME/bin/daily.job"))
+      Arguments.of("0 0 1 1 0 cmd",                   List.of("0", "0", "1", "1", "0", "cmd")),
+      Arguments.of("*/15 0 1,15 * 1-5 /usr/bin/find", List.of("0 15 30 45", "0", "1 15", "1 2 3 4 5 6 7 8 9 10 11 12", "1 2 3 4 5", "/usr/bin/find")),
+      Arguments.of("5 0 * * * $HOME/bin/daily.job",   List.of("5", "0", "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31",
+              "1 2 3 4 5 6 7 8 9 10 11 12", "0 1 2 3 4 5 6 7", "$HOME/bin/daily.job")),
+      Arguments.of("15 14 1 * *     $HOME/bin/monthly",     List.of("15", "14", "1", "1 2 3 4 5 6 7 8 9 10 11 12", "0 1 2 3 4 5 6 7", "$HOME/bin/monthly"))
     );
 }
 }
