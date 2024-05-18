@@ -33,7 +33,9 @@ public class Parser {
         String domDescription = parseDayOfMonth(tokens[2]);
         String monthDescription = parseMonth(tokens[3]);
         String dowDescription = parseDayOfWeek(tokens[4]);
-        String command = tokens[5];
+        // remaining tokens joined
+        List<String> tokensList = Arrays.asList(tokens);
+        String command = String.join(" ", tokensList.subList(5, tokensList.size()));
 
         return List.of(minuteDescription,
                 hourDescription,
